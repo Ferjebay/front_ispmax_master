@@ -10,13 +10,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@quasar/extras": "^1.17.0",
+    "@nuxt/ui": "^4.6.1",
     "axios": "^1.11.0",
-    "nuxt-quasar-ui": "^2.1.13",
-    "quasar": "^2.18.2",
+    "tailwindcss": "^4.2.2",
     "vue": "^3.5.18",
-    "vue-router": "^4.5.1",
-    "vue3-q-tel-input": "^1.1.7"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "nuxt": "^4.4.2"
