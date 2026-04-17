@@ -91,6 +91,37 @@
   --shadow-brand: 0 4px 14px 0 rgb(37 102 194 / 0.30);
 }
 
+@layer base {
+  :root {
+    --ui-color-primary-50:  #eaf0f9;
+    --ui-color-primary-100: #c8d8f1;
+    --ui-color-primary-200: #9fbde7;
+    --ui-color-primary-300: #6f9fd9;
+    --ui-color-primary-400: #4a83ce;
+    --ui-color-primary-500: #2566c2;
+    --ui-color-primary-600: #1a50a0;
+    --ui-color-primary-700: #133c7d;
+    --ui-color-primary-800: #0d285c;
+    --ui-color-primary-900: #07173d;
+    --ui-color-primary-950: #030b22;
+
+    --ui-color-secondary-50:  #fff5ea;
+    --ui-color-secondary-100: #ffe0b8;
+    --ui-color-secondary-200: #ffc882;
+    --ui-color-secondary-300: #ffad4d;
+    --ui-color-secondary-400: #ff9526;
+    --ui-color-secondary-500: #f47920;
+    --ui-color-secondary-600: #d46310;
+    --ui-color-secondary-700: #a84c09;
+    --ui-color-secondary-800: #7d3605;
+    --ui-color-secondary-900: #512202;
+    --ui-color-secondary-950: #2a1001;
+
+    --ui-primary:   var(--ui-color-primary-500);
+    --ui-secondary: var(--ui-color-secondary-500);
+  }
+}
+
 @layer utilities {
   .text-overline {
     font-size: var(--text-overline);
