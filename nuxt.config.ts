@@ -14,6 +14,8 @@ export default defineNuxtConfig({
     colorMode: false,
   },
   runtimeConfig: {
+    // Usada solo en server routes (no expuesta al cliente)
+    apiUrl: process.env.NUXT_API_URL,
     public: {
       API_URL: process.env.NUXT_PUBLIC_API_URL,
     },

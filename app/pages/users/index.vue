@@ -1,4 +1,5 @@
 <script setup>
+definePageMeta({ middleware: "auth" });
 const formUserRef = ref(null)
 const filter = ref('')
 

@@ -19,22 +19,37 @@ const EMPTY_FLOW: AuthFlow = {
   devices: [],
 };
 
+interface SidebarItem {
+  label: string;
+  ruta: string;
+  icono: string;
+  orden: number;
+  permiso: string;
+  children: SidebarItem[];
+  category?: string;
+}
+
+interface UserState {
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  sidebar?: SidebarItem[];
+}
+
 export function useAuth() {
   const { api } = useHelper();
-  const token = useCookie("auth_token", {
-    maxAge: 60 * 60 * 24 * 7,
-    secure: false,
-  });
   const router = useRouter();
   const toast = useToast();
 
   const loading = ref(false);
   const flow = useState<AuthFlow>("auth_flow", () => ({ ...EMPTY_FLOW }));
+  const user = useState<UserState | null>("user", () => null);
 
   const login = async (email: string, password: string) => {
     loading.value = true;
     try {
-      const data = await api<any>("user/login", {
+      // El server route registra el token en la cookie y no lo expone al cliente
+      const data = await $fetch<any>("/api/auth/login", {
         method: "POST",
         body: { email, password },
       });
@@ -59,8 +74,8 @@ export function useAuth() {
         return;
       }
 
-      token.value = data.token;
       flow.value = { ...EMPTY_FLOW };
+      user.value = { ...data, sidebar: data.sidebar ?? [] };
       await router.push("/dashboard");
     } catch (error: any) {
       toast.add({
@@ -74,7 +89,7 @@ export function useAuth() {
   };
 
   const verify2fa = async (code: string) => {
-    const data = await api<any>("user/login/2fa", {
+    const data = await $fetch<any>("/api/auth/2fa", {
       method: "POST",
       body: { tempToken: flow.value.tempToken, code },
     });
@@ -89,8 +104,8 @@ export function useAuth() {
       return;
     }
 
-    token.value = data.token;
     flow.value = { ...EMPTY_FLOW };
+    user.value = { ...data, sidebar: data.sidebar ?? [] };
     await router.push("/dashboard");
   };
 
@@ -103,11 +118,14 @@ export function useAuth() {
     flow.value = { ...EMPTY_FLOW };
   };
 
-  const logout = () => {
-    token.value = null;
+  const logout = async () => {
+    await $fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    user.value = null;
+    flow.value = { ...EMPTY_FLOW };
     router.push("/");
   };
 
+  const token = useCookie("auth_token");
   const isAuthenticated = computed(() => !!token.value);
 
   return {
@@ -119,5 +137,6 @@ export function useAuth() {
     isAuthenticated,
     flow,
     loading,
+    user,
   };
 }
