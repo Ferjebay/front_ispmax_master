@@ -1,4 +1,4 @@
-import type { Usuario, CreateUsuarioPayload, UpdateUsuarioPayload, UsuarioPaginationMeta } from '~/interfaces/usuario.interface'
+import type { Usuario, CreateUsuarioPayload, UpdateUsuarioPayload } from '~/interfaces/usuario.interface'
 
 export function useUsuario() {
   const toast = useToast()
@@ -12,12 +12,12 @@ export function useUsuario() {
   const loadUsuarios = async (currentPage = page.value, currentLimit = limit.value) => {
     loading.value = true
     try {
-      const { data, meta } = await $fetch<{ data: Usuario[]; meta: UsuarioPaginationMeta }>(
+      const response = await $fetch<{ data: Usuario[]; total: number }>(
         '/api/usuarios',
         { params: { page: currentPage, limit: currentLimit } },
       )
-      usuarios.value = data
-      total.value = meta.total
+      usuarios.value = response.data
+      total.value = response.total
       page.value = currentPage
     } catch (error: any) {
       toast.add({

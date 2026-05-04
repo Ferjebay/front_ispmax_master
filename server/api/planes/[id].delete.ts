@@ -5,8 +5,16 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
-  return $fetch(`${config.apiUrl}/planes/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  try {
+    return await $fetch(`${config.apiUrl}/planes/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  } catch (error: any) {
+    throw createError({
+      statusCode: error.response?.status ?? 500,
+      data: error.data,
+      message: error.data?.message ?? error.message,
+    })
+  }
 })

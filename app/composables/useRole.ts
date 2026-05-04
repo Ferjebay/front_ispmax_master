@@ -5,12 +5,6 @@ export interface Role {
   estado: boolean
 }
 
-interface PaginationMeta {
-  total: number
-  page: number
-  limit: number
-}
-
 export function useRole() {
   const { api } = useHelper()
   const toast = useToast()
@@ -24,11 +18,11 @@ export function useRole() {
   const loadRoles = async (currentPage = page.value, currentLimit = limit.value) => {
     loading.value = true
     try {
-      const { data, meta } = await api<{ data: Role[]; meta: PaginationMeta }>('roles', {
+      const response = await api<{ data: Role[]; total: number }>('roles', {
         params: { page: currentPage, limit: currentLimit },
       })
-      roles.value = data
-      total.value = meta.total
+      roles.value = response.data
+      total.value = response.total
       page.value = currentPage
     } catch (error: any) {
       toast.add({

@@ -1,4 +1,4 @@
-import type { Plan, CreatePlanPayload, UpdatePlanPayload, PaginationMeta } from '~/interfaces/plan.interface'
+import type { Plan, CreatePlanPayload, UpdatePlanPayload } from '~/interfaces/plan.interface'
 
 export function usePlan() {
   const toast = useToast()
@@ -12,12 +12,12 @@ export function usePlan() {
   const loadPlanes = async (currentPage = page.value, currentLimit = limit.value) => {
     loading.value = true
     try {
-      const { data, meta } = await $fetch<{ data: Plan[]; meta: PaginationMeta }>(
+      const response = await $fetch<{ data: Plan[]; total: number }>(
         '/api/planes',
         { params: { page: currentPage, limit: currentLimit } },
       )
-      planes.value = data
-      total.value = meta.total
+      planes.value = response.data
+      total.value = response.total
       page.value = currentPage
     } catch (error: any) {
       toast.add({

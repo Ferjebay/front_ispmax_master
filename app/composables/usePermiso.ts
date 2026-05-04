@@ -1,4 +1,4 @@
-import type { Permiso, CreatePermisoPayload, PaginationMeta } from '~/interfaces/permiso.interface'
+import type { Permiso, CreatePermisoPayload } from '~/interfaces/permiso.interface'
 
 export function usePermiso() {
   const toast = useToast()
@@ -36,12 +36,12 @@ export function usePermiso() {
   const loadPermisos = async (currentPage = page.value, currentLimit = limit.value) => {
     loading.value = true
     try {
-      const { data, meta } = await $fetch<{ data: Permiso[]; meta: PaginationMeta }>(
+      const response = await $fetch<{ data: Permiso[]; total: number }>(
         '/api/permisos',
         { params: { page: currentPage, limit: currentLimit } },
       )
-      permisos.value = data
-      total.value = meta.total
+      permisos.value = response.data
+      total.value = response.total
       page.value = currentPage
     } catch (error: any) {
       toast.add({

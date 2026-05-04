@@ -6,9 +6,17 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   const body = await readBody(event)
 
-  return $fetch(`${config.apiUrl}/permisos/${id}`, {
-    method: 'PATCH',
-    headers: { Authorization: `Bearer ${token}` },
-    body,
-  })
+  try {
+    return await $fetch(`${config.apiUrl}/permisos/${id}`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` },
+      body,
+    })
+  } catch (error: any) {
+    throw createError({
+      statusCode: error.response?.status ?? 500,
+      data: error.data,
+      message: error.data?.message ?? error.message,
+    })
+  }
 })

@@ -1,4 +1,4 @@
-import type { Cliente, CreateClientePayload, UpdateClientePayload, PaginationMeta } from '~/interfaces/cliente.interface'
+import type { Cliente, CreateClientePayload, UpdateClientePayload } from '~/interfaces/cliente.interface'
 
 export function useCliente() {
   const toast = useToast()
@@ -12,12 +12,12 @@ export function useCliente() {
   const loadClientes = async (currentPage = page.value, currentLimit = limit.value) => {
     loading.value = true
     try {
-      const { data, meta } = await $fetch<{ data: Cliente[]; meta: PaginationMeta }>(
+      const response = await $fetch<{ data: Cliente[]; total: number }>(
         '/api/clientes',
         { params: { page: currentPage, limit: currentLimit } },
       )
-      clientes.value = data
-      total.value = meta.total
+      clientes.value = response.data
+      total.value = response.total
       page.value = currentPage
     } catch (error: any) {
       toast.add({

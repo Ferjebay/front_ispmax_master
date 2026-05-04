@@ -5,8 +5,16 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const query = getQuery(event)
 
-  return $fetch(`${config.apiUrl}/clientes`, {
-    headers: { Authorization: `Bearer ${token}` },
-    query,
-  })
+  try {
+    return await $fetch(`${config.apiUrl}/clientes`, {
+      headers: { Authorization: `Bearer ${token}` },
+      query,
+    })
+  } catch (error: any) {
+    throw createError({
+      statusCode: error.response?.status ?? 500,
+      data: error.data,
+      message: error.data?.message ?? error.message,
+    })
+  }
 })

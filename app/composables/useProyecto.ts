@@ -1,4 +1,4 @@
-import type { Proyecto, CreateProyectoPayload, PaginationMeta } from '~/interfaces/proyecto.interface'
+import type { Proyecto, CreateProyectoPayload } from '~/interfaces/proyecto.interface'
 
 export function useProyecto() {
   const toast = useToast()
@@ -12,12 +12,12 @@ export function useProyecto() {
   const loadProyectos = async (currentPage = page.value, currentLimit = limit.value) => {
     loading.value = true
     try {
-      const { data, meta } = await $fetch<{ data: Proyecto[]; meta: PaginationMeta }>(
+      const response = await $fetch<{ data: Proyecto[]; total: number }>(
         '/api/proyectos',
         { params: { page: currentPage, limit: currentLimit } },
       )
-      proyectos.value = data
-      total.value = meta.total
+      proyectos.value = response.data
+      total.value = response.total
       page.value = currentPage
     } catch (error: any) {
       toast.add({
