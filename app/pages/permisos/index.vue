@@ -21,6 +21,18 @@ const {
   uploadBulk,
 } = usePermiso()
 
+const search = ref('')
+
+const filteredPermisos = computed(() => {
+  const q = search.value.trim().toLowerCase()
+  if (!q) return permisos.value
+  return permisos.value.filter(p =>
+    p.nombre?.toLowerCase().includes(q)
+    || p.label?.toLowerCase().includes(q)
+    || p.ruta?.toLowerCase().includes(q),
+  )
+})
+
 const fileInputRef = ref<HTMLInputElement>()
 
 const columns: TableColumn<Permiso>[] = [
@@ -85,8 +97,16 @@ onMounted(() => loadPermisos())
       </div>
     </div>
 
+    <!-- Buscador -->
+    <UInput
+      v-model="search"
+      icon="i-lucide-search"
+      placeholder="Buscar por nombre, label o ruta..."
+      class="max-w-sm"
+    />
+
     <!-- Tabla -->
-    <UTable :data="permisos" :columns="columns" :loading="loading">
+    <UTable :data="filteredPermisos" :columns="columns" :loading="loading">
       <template #label-cell="{ row }">
         <span :class="!row.original.label ? 'text-muted' : ''">
           {{ row.original.label || '—' }}
