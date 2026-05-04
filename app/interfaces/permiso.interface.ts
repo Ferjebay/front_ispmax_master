@@ -1,5 +1,5 @@
 export interface Permiso {
-  id: string
+  _id: string
   nombre: string
   label?: string
   ruta?: string

@@ -67,7 +67,7 @@ const onSubmit = async () => {
     if (modalMode.value === 'create') {
       await createPermiso(payload)
     } else {
-      await updatePermiso(selectedPermiso.value!.id, payload)
+      await updatePermiso(selectedPermiso.value!._id, payload)
     }
 
     await loadPermisos()

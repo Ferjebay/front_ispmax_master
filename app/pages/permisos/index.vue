@@ -160,7 +160,7 @@ onMounted(() => loadPermisos())
             color="error"
             variant="ghost"
             size="sm"
-            @click="removePermiso(row.original.id)"
+            @click="removePermiso(row.original._id)"
           />
           <UButton
             v-else
@@ -168,7 +168,7 @@ onMounted(() => loadPermisos())
             color="success"
             variant="ghost"
             size="sm"
-            @click="restorePermiso(row.original.id)"
+            @click="restorePermiso(row.original._id)"
           />
         </div>
       </template>
