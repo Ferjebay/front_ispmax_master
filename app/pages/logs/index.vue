@@ -359,8 +359,7 @@ onMounted(() => loadLogs())
         <!-- Diff prev vs new -->
         <div
           v-if="selectedLog.prev_value || selectedLog.new_value"
-          class="grid grid-cols-1 gap-4"
-          :class="selectedLog.prev_value && selectedLog.new_value ? 'md:grid-cols-2' : ''"
+          class="flex flex-col gap-4"
         >
           <div v-if="selectedLog.prev_value">
             <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">
