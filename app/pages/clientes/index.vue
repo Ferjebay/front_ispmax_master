@@ -18,7 +18,6 @@ const columns: TableColumn<Cliente>[] = [
   { accessorKey: 'nombres', header: 'Nombres' },
   { accessorKey: 'email', header: 'Email' },
   { accessorKey: 'empresa', header: 'Empresa' },
-  { accessorKey: 'dns', header: 'DNS' },
   { accessorKey: 'estado', header: 'Estado' },
   { accessorKey: 'actions', header: 'Acciones' },
 ]

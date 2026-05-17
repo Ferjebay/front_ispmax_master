@@ -4,7 +4,7 @@ export interface Cliente {
   nombres: string
   email: string
   empresa: string
-  dns: string
+  dns?: string
   estado: boolean
   createdAt?: string
   updatedAt?: string
@@ -15,7 +15,6 @@ export interface CreateClientePayload {
   nombres: string
   email: string
   empresa: string
-  dns: string
   estado?: boolean
 }
 
@@ -24,7 +23,6 @@ export interface UpdateClientePayload {
   nombres?: string
   email?: string
   empresa?: string
-  dns?: string
   estado?: boolean
 }
 

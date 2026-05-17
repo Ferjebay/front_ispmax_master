@@ -13,7 +13,6 @@ const form = reactive<CreateClientePayload>({
   nombres: '',
   email: '',
   empresa: '',
-  dns: '',
   estado: true,
 })
 
@@ -24,8 +23,6 @@ const validate = (): string | null => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(form.email)) return 'El email no tiene un formato válido'
   if (form.empresa.trim().length < 2) return 'La empresa debe tener al menos 2 caracteres'
-  const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/
-  if (!ipRegex.test(form.dns)) return 'El DNS debe ser una IP válida (ej: 192.168.1.1)'
   return null
 }
 
@@ -43,7 +40,6 @@ const onSubmit = async () => {
       nombres: form.nombres.trim(),
       email: form.email.trim(),
       empresa: form.empresa.trim(),
-      dns: form.dns.trim(),
       estado: form.estado,
     })
     router.push('/clientes')
@@ -106,14 +102,6 @@ const onSubmit = async () => {
         <UInput
           v-model="form.empresa"
           placeholder="Ej: Acme Corp"
-          class="w-full"
-        />
-      </UFormField>
-
-      <UFormField label="DNS (IP)" required>
-        <UInput
-          v-model="form.dns"
-          placeholder="Ej: 192.168.1.1"
           class="w-full"
         />
       </UFormField>
