@@ -6,13 +6,6 @@ definePageMeta({ middleware: 'auth' })
 
 const { clientes, loading, total, page, limit, loadClientes, removeCliente, restoreCliente } = useCliente()
 
-interface FormClienteRef {
-  open: (mode: 'create' | 'edit', cliente?: Cliente) => void
-  close: () => void
-}
-
-const formRef = ref<FormClienteRef>()
-
 const columns: TableColumn<Cliente>[] = [
   { accessorKey: 'identificacion', header: 'Identificación' },
   { accessorKey: 'nombres', header: 'Nombres' },
@@ -59,7 +52,7 @@ onMounted(() => loadClientes())
             color="neutral"
             variant="ghost"
             size="sm"
-            @click="formRef?.open('edit', row.original)"
+            :to="`/clientes/${row.original.id}`"
           />
           <UButton
             v-if="row.original.estado"
@@ -91,5 +84,4 @@ onMounted(() => loadClientes())
     </div>
   </div>
 
-  <ClientesFormCliente ref="formRef" @refresh="loadClientes" />
 </template>
