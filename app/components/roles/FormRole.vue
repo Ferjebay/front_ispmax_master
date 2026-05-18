@@ -135,7 +135,7 @@ const onSubmit = async () => {
     :open="open"
     :title="mode === 'create' ? 'Crear rol' : 'Editar rol'"
     :ui="{ content: 'max-w-2xl' }"
-    @close="emit('close')"
+    @update:open="(v) => !v && emit('close')"
   >
     <template #body>
       <div class="flex flex-col gap-4">

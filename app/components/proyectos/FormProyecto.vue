@@ -84,7 +84,7 @@ defineExpose({ open, close })
   <UModal
     :open="isOpen"
     :title="mode === 'create' ? 'Nuevo proyecto' : 'Editar proyecto'"
-    @close="close"
+    @update:open="(v) => !v && close()"
   >
     <template #body>
       <div class="flex flex-col gap-4">

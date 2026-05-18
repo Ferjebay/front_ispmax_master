@@ -98,7 +98,7 @@ defineExpose({ open, close: closeModal })
   <UModal
     :open="modalOpen"
     :title="modalMode === 'create' ? 'Nuevo permiso' : 'Editar permiso'"
-    @close="closeModal"
+    @update:open="(v) => !v && closeModal()"
   >
     <template #body>
       <div class="flex flex-col gap-4">
