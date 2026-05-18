@@ -14,16 +14,28 @@ const estadoColor: Record<string, 'success' | 'warning' | 'error' | 'info'> = {
 }
 
 const columns: TableColumn<Token>[] = [
+  {
+    id: 'cliente',
+    accessorFn: (row) => row.suscripcion?.cliente?.nombres,
+    header: 'Cliente',
+  },
   { accessorKey: 'tipo', header: 'Tipo' },
-  { accessorKey: 'tipo_periodo', header: 'Período' },
-  { accessorKey: 'periodo_meses', header: 'Meses' },
-  { accessorKey: 'costo', header: 'Costo' },
+  {
+    id: 'tipo_periodo',
+    accessorFn: (row) => row.suscripcion?.tipo_periodo,
+    header: 'Período',
+  },
+  {
+    id: 'costo',
+    accessorFn: (row) => row.suscripcion?.costo,
+    header: 'Costo',
+  },
   { accessorKey: 'estado', header: 'Estado' },
   { accessorKey: 'expires_at', header: 'Vence' },
   { accessorKey: 'actions', header: 'Acciones' },
 ]
 
-const formatDate = (date?: string) =>
+const formatDate = (date?: string | null) =>
   date ? new Date(date).toLocaleDateString('es-EC') : '—'
 
 onMounted(() => loadTokens())
@@ -45,6 +57,13 @@ onMounted(() => loadTokens())
     </div>
 
     <UTable :data="tokens" :columns="columns" :loading="loading">
+      <template #cliente-cell="{ row }">
+        <div class="flex flex-col">
+          <span class="font-medium">{{ row.original.suscripcion?.cliente?.nombres ?? '—' }}</span>
+          <span class="text-xs text-muted">{{ row.original.suscripcion?.cliente?.identificacion }}</span>
+        </div>
+      </template>
+
       <template #tipo-cell="{ row }">
         <UBadge color="neutral" variant="subtle">
           {{ row.original.tipo === 'api_token' ? 'API Token' : 'Activación' }}
@@ -52,11 +71,11 @@ onMounted(() => loadTokens())
       </template>
 
       <template #tipo_periodo-cell="{ row }">
-        <span class="capitalize">{{ row.original.tipo_periodo }}</span>
+        <span class="capitalize">{{ row.original.suscripcion?.tipo_periodo ?? '—' }}</span>
       </template>
 
       <template #costo-cell="{ row }">
-        ${{ row.original.costo.toFixed(2) }}
+        ${{ parseFloat(row.original.suscripcion?.costo ?? '0').toFixed(2) }}
       </template>
 
       <template #estado-cell="{ row }">
