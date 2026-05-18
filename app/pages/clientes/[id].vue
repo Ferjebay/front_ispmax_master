@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { Cliente, UpdateClientePayload } from '~/interfaces/cliente.interface'
+import type { TableColumn } from '@nuxt/ui'
+import type { Cliente, UpdateClientePayload, Suscripcion, HistorialPago } from '~/interfaces/cliente.interface'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -11,8 +12,6 @@ const toast = useToast()
 const saving = ref(false)
 
 const { data: cliente, pending, error } = await useFetch<Cliente>(`/api/clientes/${id}`)
-
-  console.log('Cliente:', cliente.value)
 
 const form = reactive<UpdateClientePayload>({
   identificacion: '',
@@ -73,6 +72,32 @@ const tabs = [
   { label: 'Suscripciones', slot: 'subscriptions' },
   { label: 'Historial de pago', slot: 'payments' },
 ]
+
+const suscripcionColumns: TableColumn<Suscripcion>[] = [
+  { accessorKey: 'id', header: 'ID' },
+  { accessorKey: 'plan_id', header: 'Plan' },
+  { accessorKey: 'costo', header: 'Costo' },
+  { accessorKey: 'descuento', header: 'Descuento' },
+  { accessorKey: 'tipo_periodo', header: 'Tipo período' },
+  { accessorKey: 'periodo_meses', header: 'Meses' },
+  { accessorKey: 'estado', header: 'Estado' },
+  { accessorKey: 'created_at', header: 'Creado' },
+]
+
+const pagoColumns: TableColumn<HistorialPago>[] = [
+  { accessorKey: 'id', header: 'ID' },
+  { accessorKey: 'suscripcion_id', header: 'Suscripción' },
+  { accessorKey: 'monto', header: 'Monto' },
+  { accessorKey: 'numero_ciclo', header: 'Ciclo' },
+  { accessorKey: 'estado', header: 'Estado' },
+  { accessorKey: 'fecha_inicio', header: 'Inicio' },
+  { accessorKey: 'fecha_fin', header: 'Fin' },
+  { accessorKey: 'paid_at', header: 'Pagado' },
+  { accessorKey: 'referencia_pago', header: 'Referencia' },
+]
+
+const formatDate = (val: string | null) =>
+  val ? new Date(val).toLocaleDateString('es-EC') : '—'
 </script>
 
 <template>
@@ -170,14 +195,82 @@ const tabs = [
       </template>
 
       <template #subscriptions>
-        <div class="pt-4 text-muted text-sm">
-          Próximamente: suscripciones del cliente.
+        <div class="pt-4">
+          <template v-if="pending">
+            <div v-for="i in 3" :key="i" class="h-10 bg-muted animate-pulse rounded mb-2" />
+          </template>
+          <template v-else-if="!cliente?.suscripciones?.length">
+            <p class="text-sm text-muted">No hay suscripciones registradas.</p>
+          </template>
+          <template v-else>
+            <UTable :data="cliente.suscripciones" :columns="suscripcionColumns" class="w-full">
+              <template #id-cell="{ row }">
+                <span class="font-mono text-xs">{{ row.original.id.slice(0, 8) }}...</span>
+              </template>
+              <template #plan_id-cell="{ row }">
+                <span class="font-mono text-xs">{{ row.original.plan_id.slice(0, 8) }}...</span>
+              </template>
+              <template #costo-cell="{ row }">
+                ${{ row.original.costo }}
+              </template>
+              <template #descuento-cell="{ row }">
+                {{ row.original.descuento ? `$${row.original.descuento}` : '—' }}
+              </template>
+              <template #estado-cell="{ row }">
+                <UBadge
+                  :color="row.original.estado === 'activo' ? 'success' : 'warning'"
+                  variant="subtle"
+                >
+                  {{ row.original.estado }}
+                </UBadge>
+              </template>
+              <template #created_at-cell="{ row }">
+                {{ formatDate(row.original.created_at) }}
+              </template>
+            </UTable>
+          </template>
         </div>
       </template>
 
       <template #payments>
-        <div class="pt-4 text-muted text-sm">
-          Próximamente: historial de pagos del cliente.
+        <div class="pt-4">
+          <template v-if="pending">
+            <div v-for="i in 3" :key="i" class="h-10 bg-muted animate-pulse rounded mb-2" />
+          </template>
+          <template v-else-if="!cliente?.historial_pagos?.length">
+            <p class="text-sm text-muted">No hay historial de pagos registrado.</p>
+          </template>
+          <template v-else>
+            <UTable :data="cliente.historial_pagos" :columns="pagoColumns" class="w-full">
+              <template #id-cell="{ row }">
+                <span class="font-mono text-xs">{{ row.original.id.slice(0, 8) }}...</span>
+              </template>
+              <template #suscripcion_id-cell="{ row }">
+                <span class="font-mono text-xs">{{ row.original.suscripcion_id.slice(0, 8) }}...</span>
+              </template>
+              <template #monto-cell="{ row }">
+                {{ row.original.monto ? `$${row.original.monto}` : '—' }}
+              </template>
+              <template #numero_ciclo-cell="{ row }">
+                {{ row.original.numero_ciclo ?? '—' }}
+              </template>
+              <template #estado-cell="{ row }">
+                {{ row.original.estado ?? '—' }}
+              </template>
+              <template #fecha_inicio-cell="{ row }">
+                {{ formatDate(row.original.fecha_inicio) }}
+              </template>
+              <template #fecha_fin-cell="{ row }">
+                {{ formatDate(row.original.fecha_fin) }}
+              </template>
+              <template #paid_at-cell="{ row }">
+                {{ formatDate(row.original.paid_at) }}
+              </template>
+              <template #referencia_pago-cell="{ row }">
+                {{ row.original.referencia_pago ?? '—' }}
+              </template>
+            </UTable>
+          </template>
         </div>
       </template>
     </UTabs>
